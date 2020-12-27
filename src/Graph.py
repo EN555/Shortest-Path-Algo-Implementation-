@@ -16,30 +16,53 @@ class Graph:
      if self.nodes == {}:
          return 0
      num = 0
-     for key, value in self.nodes.items():
-      print("The num: ", num)
-      num += int(value.nei_size())
+     for val in self.nodes.values():
+      num = num + int(Node(val).nei_size())
      return num
 
     def get_all_v(self):
         return self.nodes.items()
 
-    # def all_in_edges_of_node(self, id1: int):
-    #     dict= {}
-    #     for key, value in self.nodes.items():
-    #         for val in value.get_neighbors_weight.items():
-    #             if val == id1:
-    #              dict.update()
+    def all_in_edges_of_node(self, id1: int):
+        l1 = self.nodes.get(id1)
+        if l1 != None:
+            Node(l1).get_connect_to_him().items()
 
     def all_out_edges_of_node(self, id1: int):
         return self.nodes.get(id1).get_neighbors
 
+    def add_edge(self, id1: int, id2: int, weight: float):
+        l1 , l2 = self.nodes.get(id1), self.nodes.get(id2)
+        if self.nodes != {} and l1 != None and l2 != None:
+            Node(l1).add_neighbor(l2)
+            Node(l1).set_weight(id2,weight)
+            Node(l2).get_connect_to_him().update({id1: l1})
+            self.Number_Of_edges+=1
+
     def add_node(self, node_id: int, pos: tuple = None):
-        node = Node(node_id)
-        self.nodes.update({node_id: node})
-        node.set_pos(pos)
+     node = Node(node_id, 0, 0)
+     self.nodes.update({node_id: node})
+     node.set_pos(pos)
 
+    def get_mc(self):
+        return self.Number_Of_modes
 
+    def remove_node(self, node_id: int):
+        l1= self.nodes.get(node_id)
+        if l1 != None:
+            for to_him in Node(self.nodes.get(node_id)).get_connect_to_him().values():
+              l2 = Node(to_him).get_neighbors().get(node_id)
+              del l2
+
+    def remove_edge(self, node_id1: int, node_id2: int):
+        l1, l2 = self.nodes.get(node_id1), self.nodes.get(node_id2)
+        if l1 != None and l2 != None:
+            l3 = Node(l1).get_neighbors().get(id1)
+            l4 =  Node(l2).get_connect_to_him().get(l1)
+            if l3 != None:
+                del l3
+                self.Number_Of_edges-=1
+                del l4
 
 
 class Node:
@@ -51,6 +74,7 @@ class Node:
         self.pos = ()
         self.neighbor_objects = {}
         self.neighbor_weight = {}
+        self.connect_to_him = {}
 
     def get_key(self):
         return self.key
@@ -62,7 +86,7 @@ class Node:
         return self.info
 
     def get_neighbors(self):
-        return self.neighbor_objects.items()
+        return self.neighbor_objects
 
     def nei_size(self):
         if self.neighbor_objects == {}:
@@ -75,9 +99,15 @@ class Node:
     def get_neighbors_weight(self):
         return self.neighbor_weight.items()
 
+    def get_connect_to_him(self):
+        return self.connect_to_him
+
     def add_neighbor(self, other, weight):
         self.neighbor_objects.update({other.get_key(): other})
         self.neighbor_weight.update({other.get_key(): weight})
+
+    def set_weight(self, id1, weight):
+        self.neighbor_weight.update({id1: weight})
 
     def get_weight(self, other):
         return self.get_neighbors_weight().get(other.get_key)
@@ -98,35 +128,20 @@ class Node:
         return "The key is", self.key, "The neighbor is: ", self.get_neighbors()
 
 if __name__ == '__main__':
-        node1 = Node(1, 0, 0)
-        node2 = Node(2, 0, 0)
-        node2.set_pos((1,5,6))
-        node3 = Node(3, 0, 0)
-        node4 = Node(4, 0, 0)
-        node1.set_pos((1, 2, 3))
-        # print(node1.get_pos())
-        node1.add_neighbor(node2, 2)
-        node1.add_neighbor(node3, 2)
-        node1.add_neighbor(node4, 6)
-        node2.add_neighbor(node1,2)
-        node2.add_neighbor(node3,3)
-
-        # print(node1.get_neighbors())
-        # print(node1.get_neighbors_weight())
-        # print(node1.get_neighbors())
-
-        for key, value in node1.get_neighbors():
-            print(key ,"The val: ", value.get_pos())
-
-        print("The len is: ", len({"bl":"bl", "cds" : "dcsa"}))
 
         graph = Graph()
-        graph.add_node(node1)
-        graph.add_node(node2)
-        graph.add_node(node3)
-        graph.add_node(node4)
+        graph.add_node(1, (1,2,3))
+        graph.add_node(2, (2,3,4))
+        graph.add_node(3, (5,4,6))
+        graph.add_node(4, (3,4,6))
 
-        print(graph.v_size())
+        print("The number of edges: " ,graph.v_size())
         print("The edge size is: " ,graph.e_size())
 
         print("The nei_size", node1.nei_size())
+
+        print(graph.get_all_v())
+
+        dict = {1: "hel", 2: "dew"}
+
+        print(dict.get(5))
