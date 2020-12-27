@@ -8,17 +8,10 @@ class Graph:
         self.Number_Of_modes = 0
 
     def v_size(self):
-     if self.nodes == {}:
-        return 0
-     return len(self.nodes)
+        return self.Number_Of_nodes
 
     def e_size(self):
-     if self.nodes == {}:
-         return 0
-     num = 0
-     for val in self.nodes.values():
-      num = num + int(Node(val).nei_size())
-     return num
+        return self.Number_Of_edges
 
     def get_all_v(self):
         return self.nodes.items()
@@ -34,36 +27,42 @@ class Graph:
     def add_edge(self, id1: int, id2: int, weight: float):
         l1 , l2 = self.nodes.get(id1), self.nodes.get(id2)
         if self.nodes != {} and l1 != None and l2 != None:
-            Node(l1).add_neighbor(l2)
-            Node(l1).set_weight(id2,weight)
+            Node(l1).add_neighbor(l2, weight)
             Node(l2).get_connect_to_him().update({id1: l1})
-            self.Number_Of_edges+=1
+            self.Number_Of_edges += 1
+            self.Number_Of_modes += 1
 
     def add_node(self, node_id: int, pos: tuple = None):
-     node = Node(node_id, 0, 0)
-     self.nodes.update({node_id: node})
-     node.set_pos(pos)
+        l1 = self.nodes.get(node_id)
+        if l1 == None:
+         node = Node(node_id, 0, 0)
+         self.nodes.update({node_id: node})
+         node.set_pos(pos)
+         self.Number_Of_nodes += 1
 
     def get_mc(self):
         return self.Number_Of_modes
 
     def remove_node(self, node_id: int):
-        l1= self.nodes.get(node_id)
+        l1 = self.nodes.get(node_id)
         if l1 != None:
             for to_him in Node(self.nodes.get(node_id)).get_connect_to_him().values():
-              l2 = Node(to_him).get_neighbors().get(node_id)
-              del l2
+               Node(to_him).get_neighbors().pop(node_id)
+            self.nodes.pop(node_id)
+            self.Number_Of_modes += 1
+            self.Number_Of_nodes -= 1
 
     def remove_edge(self, node_id1: int, node_id2: int):
         l1, l2 = self.nodes.get(node_id1), self.nodes.get(node_id2)
         if l1 != None and l2 != None:
-            l3 = Node(l1).get_neighbors().get(id1)
-            l4 =  Node(l2).get_connect_to_him().get(l1)
+            print("hello")
+            l3 = Node(l1).get_neighbors().get(node_id2)
+            print("the edge is: " ,l3)
             if l3 != None:
-                del l3
-                self.Number_Of_edges-=1
-                del l4
-
+                print("hello")
+                Node(l1).get_neighbors().pop(node_id1)
+                Node(l2).get_connect_to_him().pop(node_id1)
+                self.Number_Of_edges -= 1
 
 class Node:
 
@@ -135,13 +134,23 @@ if __name__ == '__main__':
         graph.add_node(3, (5,4,6))
         graph.add_node(4, (3,4,6))
 
-        print("The number of edges: " ,graph.v_size())
-        print("The edge size is: " ,graph.e_size())
+        print("The number of nodes is: ", graph.v_size())
 
-        print("The nei_size", node1.nei_size())
+        graph.add_edge(1, 2, 3)
+        graph.add_edge(2, 3, 3)
+        graph.add_edge(3, 4, 3)
+        graph.add_edge(4, 1, 3)
+
+        print("The number of edges is: " , graph.e_size())
 
         print(graph.get_all_v())
 
-        dict = {1: "hel", 2: "dew"}
+        graph.remove_node(1)
 
-        print(dict.get(5))
+        print(graph.get_all_v())
+
+        print("The number of nodes is: ", graph.v_size())
+
+        graph.remove_edge(3,4)
+
+        print("The number of edges is: ", graph.e_size())
