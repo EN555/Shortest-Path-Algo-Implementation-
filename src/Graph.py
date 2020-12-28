@@ -1,10 +1,10 @@
-from src.GraphInteface import GraphInteface
+from src.GraphInterface import GraphInterface
 """
 This graph represent directed weighted graph
 """
 
 
-class Graph(GraphInteface):
+class Graph(GraphInterface):
 
     """
     constructor
@@ -67,13 +67,14 @@ class Graph(GraphInteface):
     """
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
         l1, l2 = self.nodes.get(id1), self.nodes.get(id2)
-        if l1 == None or l2 == None or weight <= 0:     # check if the node exist
+        if l1 == None or l2 == None or weight < 0:     # check if the node exist
             return False                                                        # and the edge not exist
         else:       # if they already have not edge
             l1.add_neighbor(l2, weight)  # add to his neighbor edge
             l2.get_connect_to_him().update({id1: l1})   # update at who the he direct to him
             self.Number_Of_edges += 1
             self.Number_Of_modes += 1
+            return True
 
     """
     Adds a node to the graph.
@@ -148,6 +149,7 @@ class Graph(GraphInteface):
         
     def __str__(self):
         return(str([node for node in self.get_all_v().values()]))
+
     def __repr__(self):
         return(str([node for node in self.get_all_v().values()]))    
 
