@@ -67,7 +67,7 @@ class Graph(GraphInteface):
     """
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
         l1, l2 = self.nodes.get(id1), self.nodes.get(id2)
-        if l1 == None or l2 == None or weight <= 0 or l1.get_neighbors().get(id1) == None:     # check if the node exist
+        if l1 == None or l2 == None or weight < 0 or l1.get_neighbors().get(id2) != None:     # check if the node exist
             return False                                                        # and the edge not exist
         else:       # if they already have not edge
             l1.add_neighbor(l2, weight)  # add to his neighbor edge
@@ -273,24 +273,6 @@ class Node:
 
 if __name__ == '__main__':
 
-
-    """
-    check node
-    """
-    node1 = Node(1, 0, 0)
-    node2 = Node(2, 0, 0)
-    node3 = Node(3, 0, 0)
-    node4 = Node(4, 0, 0)
-
-    node1.add_neighbor(node2, 2)
-    node1.add_neighbor(node3, 3)
-    node1.add_neighbor(node4, 4)
-
-    print(node1.str())
-
-    """
-    check graph
-    """
     graph = Graph()
     graph.add_node(1, (1, 2, 3))
     graph.add_node(2, (2,3,4))
@@ -304,11 +286,11 @@ if __name__ == '__main__':
     graph.add_edge(3, 4, 3)
     graph.add_edge(4, 1, 3)
 
-    # print("The number of edges is: ", graph.e_size())
+    print("The number of edges is: ", graph.e_size())
 
     # print(graph.get_all_v())
 
-    graph.remove_node(3)
+    # graph.remove_node(3)
 
     # print("The number of nodes is: ", graph.v_size())
 
