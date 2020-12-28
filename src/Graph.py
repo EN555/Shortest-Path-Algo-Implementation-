@@ -67,7 +67,7 @@ class Graph(GraphInterface):
     """
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
         l1, l2 = self.nodes.get(id1), self.nodes.get(id2)
-        if l1 == None or l2 == None or weight < 0:     # check if the node exist
+        if l1 == None or l2 == None or weight < 0 or id1 == id2:     # check if the node exist
             return False                                                        # and the edge not exist
         else:       # if they already have not edge
             l1.add_neighbor(l2, weight)  # add to his neighbor edge
@@ -259,17 +259,17 @@ class Node:
     the function update the tag of the node
     """
     def set_tag(self, tag) -> None:
-        self.tag=tag
+        self.tag = tag
 
     """
     @param pos- tuple 
     update the pos of node in graph
     """
     def set_pos(self, pos) -> None:
-        self.pos= pos
+        self.pos = pos
 
     """
-    @return the key of node and all hos neighbors
+    @return the key of node and all his neighbors
     """
     def __str__(self):
         s = []
