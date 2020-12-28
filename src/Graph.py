@@ -68,6 +68,7 @@ class Node:
 
     def __init__(self, key=0, tag=0, info=None):
         self.key = key
+        print(self.key)
         self.tag = tag
         self.info = info
         self.pos = ()
@@ -134,23 +135,9 @@ if __name__ == '__main__':
         graph.add_node(3, (5,4,6))
         graph.add_node(4, (3,4,6))
 
-        print("The number of nodes is: ", graph.v_size())
-
         graph.add_edge(1, 2, 3)
         graph.add_edge(2, 3, 3)
         graph.add_edge(3, 4, 3)
         graph.add_edge(4, 1, 3)
 
-        print("The number of edges is: " , graph.e_size())
-
-        print(graph.get_all_v())
-
-        graph.remove_node(1)
-
-        print(graph.get_all_v())
-
-        print("The number of nodes is: ", graph.v_size())
-
-        graph.remove_edge(3,4)
-
-        print("The number of edges is: ", graph.e_size())
+    
