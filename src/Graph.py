@@ -84,7 +84,7 @@ class Graph(GraphInteface):
     """
     def add_node(self, node_id: int, pos: tuple = (0, 0, 0)) -> bool:
         l1 = self.nodes.get(node_id)
-        if l1 != None:      # check if the node already exist
+        if l1 != None or node_id < 0:      # check if the node already exist
             return False
         else:       # the node didn't exist yet
             node = Node(node_id, 0, "")    # create new node
@@ -111,7 +111,7 @@ class Graph(GraphInteface):
     def remove_node(self, node_id: int) -> bool:
         l1 = self.nodes.get(node_id)
         if l1 == None:            # no such node
-            return True
+            return False
         else:              # if this node exist
             for to_him in l1.get_connect_to_him().values():    # remove all the edges that direct to this node
                 to_him.get_neighbors().pop(node_id)
@@ -301,4 +301,3 @@ if __name__ == '__main__':
     # graph.remove_edge(4,1)
     #
     # print("The number of edges is: ", graph.e_size())
-
