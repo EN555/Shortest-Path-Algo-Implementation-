@@ -1,143 +1,323 @@
 
+"""
+This graph represent directed weighted graph
+"""
+
+
 class Graph:
 
+    """
+    constructor
+    @param nodes dictionary of <key, node object>
+    @param number of edges - count the number of the edges in the graph
+    @param number of nodes - count the number of the nodes in the graph
+    @param number of modes - count the numebr of changes in nodes or edges in the graph
+    """
     def __init__(self):
         self.nodes = {}
         self.Number_Of_edges = 0
         self.Number_Of_nodes = 0
         self.Number_Of_modes = 0
 
-    def v_size(self):
+    """
+    Returns the number of vertices in this graph
+    @return: The number of vertices in this graph
+    """
+    def v_size(self) -> int:
         return self.Number_Of_nodes
 
-    def e_size(self):
+    """
+    Returns the number of edges in this graph
+    @return: The number of edges in this graph
+    """
+    def e_size(self) -> int:
         return self.Number_Of_edges
 
-    def get_all_v(self):
-        return self.nodes.items()
+    """
+    return a dictionary of all the nodes in the Graph, each node is represented using pair (key, node_data)
+    """
+    def get_all_v(self) -> dict:
+        return self.nodes
 
-    def all_in_edges_of_node(self, id1: int):
+    """
+    return a dictionary of all the nodes connected to (into) node_id ,
+    each node is represented using a pair (key, weight)
+    """
+    def all_in_edges_of_node(self, id1: int) -> dict:
         l1 = self.nodes.get(id1)
+        if l1 != None:      # check if have node like him
+            return l1.get_connect_to_him()
+
+    """
+    return a dictionary of all the nodes connected from node_id , each node is represented using a pair (key,
+    weight)
+    """
+    def all_out_edges_of_node(self, id1: int) -> dict:
+        l1 = self.nodes.get(id1)    # check if have node like him
         if l1 != None:
-            Node(l1).get_connect_to_him().items()
+            return self.nodes.get(id1).get_neighbors_weight().items()
 
-    def all_out_edges_of_node(self, id1: int):
-        return self.nodes.get(id1).get_neighbors
-
-    def add_edge(self, id1: int, id2: int, weight: float):
-        l1 , l2 = self.nodes.get(id1), self.nodes.get(id2)
-        if self.nodes != {} and l1 != None and l2 != None:
-            Node(l1).add_neighbor(l2, weight)
-            Node(l2).get_connect_to_him().update({id1: l1})
+    """
+    Adds an edge to the graph.
+    @param id1: The start node of the edge
+    @param id2: The end node of the edge
+    @param weight: The weight of the edge
+    @return: True if the edge was added successfully, False o.w.
+    If the edge already exists or one of the nodes dose not exists the functions will do nothing
+    """
+    def add_edge(self, id1: int, id2: int, weight: float) -> bool:
+        l1, l2 = self.nodes.get(id1), self.nodes.get(id2)
+        if l1 == None or l2 == None or weight <= 0 or l1.get_neighbors().get(id1) == None:     # check if the node exist
+            return False                                                        # and the edge not exist
+        else:       # if they already have not edge
+            l1.add_neighbor(l2, weight)  # add to his neighbor edge
+            l2.get_connect_to_him().update({id1: l1})   # update at who the he direct to him
             self.Number_Of_edges += 1
             self.Number_Of_modes += 1
 
-    def add_node(self, node_id: int, pos: tuple = None):
+    """
+    Adds a node to the graph.
+    @param node_id: The node ID
+    @param pos: The position of the node
+    @return: True if the node was added successfully, False o.w.
+    if the node id already exists the node will not be added
+    """
+    def add_node(self, node_id: int, pos: tuple = (0, 0, 0)) -> bool:
         l1 = self.nodes.get(node_id)
-        if l1 == None:
-         node = Node(node_id, 0, 0)
-         self.nodes.update({node_id: node})
-         node.set_pos(pos)
-         self.Number_Of_nodes += 1
+        if l1 != None:      # check if the node already exist
+            return False
+        else:       # the node didn't exist yet
+            node = Node(node_id, 0, "")    # create new node
+            self.nodes.update({node_id: node})  # update the dictionary of all the nodes above
+            node.set_pos(pos)   # update the position
+            self.Number_Of_nodes += 1      # update the number of nodes
+            self.Number_Of_modes += 1      # update the number of modes
+            return True
 
+    """
+    Returns the current version of this graph,
+    on every change in the graph state - the MC should be increased
+    @return: The current version of this graph.
+    """
     def get_mc(self):
         return self.Number_Of_modes
 
-    def remove_node(self, node_id: int):
+    """
+    Removes a node from the graph.
+    @param node_id: The node ID
+    @return: True if the node was removed successfully, False o.w.
+    if the node id does not exists the function will do nothing
+    """
+    def remove_node(self, node_id: int) -> bool:
         l1 = self.nodes.get(node_id)
-        if l1 != None:
-            for to_him in Node(self.nodes.get(node_id)).get_connect_to_him().values():
-               Node(to_him).get_neighbors().pop(node_id)
-            self.nodes.pop(node_id)
+        if l1 == None:            # no such node
+            return True
+        else:              # if this node exist
+            for to_him in l1.get_connect_to_him().values():    # remove all the edges that direct to this node
+                to_him.get_neighbors().pop(node_id)
+                to_him.get_neighbors_weight().pop(node_id)
+                self.Number_Of_edges -= 1              # update the number of edges
+                self.Number_Of_modes += 1              # update the number of modes
+            self.Number_Of_edges -= len(l1.get_neighbors())     # update the number of edge that start from him
+            self.Number_Of_modes += len(l1.get_neighbors())
+            self.nodes.pop(node_id)         # remove the current node
             self.Number_Of_modes += 1
             self.Number_Of_nodes -= 1
+        return True
 
+    """
+        Removes an edge from the graph.
+            @param node_id1: The start node of the edge
+            @param node_id2: The end node of the edge
+            @return: True if the edge was removed successfully, False o.w.
+            If such an edge does not exists the function will do nothing
+    """
     def remove_edge(self, node_id1: int, node_id2: int):
         l1, l2 = self.nodes.get(node_id1), self.nodes.get(node_id2)
-        if l1 != None and l2 != None:
-            print("hello")
-            l3 = Node(l1).get_neighbors().get(node_id2)
-            print("the edge is: " ,l3)
-            if l3 != None:
-                print("hello")
-                Node(l1).get_neighbors().pop(node_id1)
-                Node(l2).get_connect_to_him().pop(node_id1)
-                self.Number_Of_edges -= 1
+        if l1 != None and l2 != None:       # check if the node exist
+            l3 = l1.get_neighbors().get(node_id2)
+            if l3 != None:              # check if the edge exist
+                l1.get_neighbors().pop(node_id1)  # remove the the edge from he start
+                l1.get_neighbors_weight.pop(node_id1)   # remove the weight of the edge from the graph
+                l2.get_connect_to_him().pop(node_id1)  # remove the edge from he point on
+                self.Number_Of_edges -= 1   # update the number of edges
+                self.Number_Of_modes += 1   # update the number of modes
+                return True
+        else:       # if have nothing to be remove
+            return False
+
+
+"""
+This class represent single node in directed weighted graph
+"""
+
 
 class Node:
 
+    """
+    constructor
+    @param key - the ID of the node
+    @param tag - the tag use for algorithm
+    @param info - the info use for algorithm
+    """
     def __init__(self, key=0, tag=0, info=None):
         self.key = key
         print(self.key)
         self.tag = tag
         self.info = info
         self.pos = ()
-        self.neighbor_objects = {}
-        self.neighbor_weight = {}
-        self.connect_to_him = {}
+        self.neighbor_objects = {}     # represents all the edges that start from him <ID , node>
+        self.neighbor_weight = {}      # represents all the weight of the edges <ID , weight>
+        self.connect_to_him = {}       # represents all the ndoes that connect to him <ID , node>
 
-    def get_key(self):
+    """
+    return the key of the node
+    """
+    def get_key(self) -> int:
         return self.key
 
-    def get_tag(self):
+    """
+    return the tag of the node
+    """
+    def get_tag(self) -> float:
         return self.tag
 
-    def getinfo(self):
+    """
+    return the info the tag
+    """
+    def get_info(self) -> str:
         return self.info
 
-    def get_neighbors(self):
+    """
+    return dictionary of the neighbors
+    """
+    def get_neighbors(self) -> dict:
         return self.neighbor_objects
 
-    def nei_size(self):
-        if self.neighbor_objects == {}:
-            return 0
+    """
+    return the number of neighbors
+    """
+    def nei_size(self) -> int:
         return len(self.neighbor_objects)
 
-    def get_pos(self):
+    """
+    return tuple of the location of the ndoe
+    """
+    def get_pos(self) -> tuple:
         return self.pos
 
-    def get_neighbors_weight(self):
-        return self.neighbor_weight.items()
+    """
+    return dictionary of all the the weight of the nodes
+    """
+    def get_neighbors_weight(self) -> dict:
+        return self.neighbor_weight
 
-    def get_connect_to_him(self):
+    """
+    return all the nodes that direct to him
+    """
+    def get_connect_to_him(self) -> dict:
         return self.connect_to_him
 
+    """
+    @param node object 
+    @param weight of the edge
+    the function add node to the dictionary of the edge
+    """
     def add_neighbor(self, other, weight):
         self.neighbor_objects.update({other.get_key(): other})
         self.neighbor_weight.update({other.get_key(): weight})
 
+    """
+    @param id1 - ID of the node that need to update the weight
+    @param weight - weight of the edge 
+    """
     def set_weight(self, id1, weight):
         self.neighbor_weight.update({id1: weight})
 
-    def get_weight(self, other):
+    """
+    @param other - node neighbor 
+    return the weight if the node
+    """
+    def get_weight(self, other) -> float:
         return self.get_neighbors_weight().get(other.get_key)
 
-    def set_key(self, key):
-        self.key= key
-
+    """
+    @param info
+    the function update the info of the node
+    """
     def set_info(self, info):
         self.info = info
 
+    """
+    @param tag
+    the function update the tag of the node
+    """
     def set_tag(self, tag):
         self.tag=tag
 
+    """
+    @param pos- tuple 
+    update the pos of node in graph
+    """
     def set_pos(self, pos):
         self.pos= pos
 
+    """
+    @return the key of node and all hos neighbors
+    """
     def str(self):
-        return "The key is", self.key, "The neighbor is: ", self.get_neighbors()
+        s = []
+        for key in self.get_neighbors().keys():
+            s.append(key)
+        return "The key is: ", self.key, "The neighbor is: ", s
+
 
 if __name__ == '__main__':
 
-        graph = Graph()
-        graph.add_node(1, (1,2,3))
-        graph.add_node(2, (2,3,4))
-        graph.add_node(3, (5,4,6))
-        graph.add_node(4, (3,4,6))
 
-        graph.add_edge(1, 2, 3)
-        graph.add_edge(2, 3, 3)
-        graph.add_edge(3, 4, 3)
-        graph.add_edge(4, 1, 3)
+    """
+    check node
+    """
+    node1 = Node(1, 0, 0)
+    node2 = Node(2, 0, 0)
+    node3 = Node(3, 0, 0)
+    node4 = Node(4, 0, 0)
 
-    
+    node1.add_neighbor(node2, 2)
+    node1.add_neighbor(node3, 3)
+    node1.add_neighbor(node4, 4)
+
+    # print(node1.get_neighbors().items())
+
+    """
+    check graph
+    """
+    graph = Graph()
+    graph.add_node(1, (1, 2, 3))
+    graph.add_node(2, (2,3,4))
+    graph.add_node(3, (5,4,6))
+    graph.add_node(4, (3,4,6))
+
+    # print("The number of nodes is: ", graph.v_size())
+
+    graph.add_edge(1, 2, 3)
+    graph.add_edge(2, 3, 3)
+    graph.add_edge(3, 4, 3)
+    graph.add_edge(4, 1, 3)
+
+    # print("The number of edges is: ", graph.e_size())
+
+    # print(graph.get_all_v())
+
+    graph.remove_node(3)
+
+    # print("The number of nodes is: ", graph.v_size())
+
+    # print("The number of edges ", graph.e_size())
+    #
+    # print("the edge is " , graph.all_out_edges_of_node(4))
+    #
+    # graph.remove_edge(4,1)
+    #
+    # print("The number of edges is: ", graph.e_size())
+
