@@ -1,10 +1,10 @@
-
+from src.GraphInteface import GraphInteface
 """
 This graph represent directed weighted graph
 """
 
 
-class Graph:
+class Graph(GraphInteface):
 
     """
     constructor
@@ -99,7 +99,7 @@ class Graph:
     on every change in the graph state - the MC should be increased
     @return: The current version of this graph.
     """
-    def get_mc(self):
+    def get_mc(self) -> int:
         return self.Number_Of_modes
 
     """
@@ -132,7 +132,7 @@ class Graph:
             @return: True if the edge was removed successfully, False o.w.
             If such an edge does not exists the function will do nothing
     """
-    def remove_edge(self, node_id1: int, node_id2: int):
+    def remove_edge(self, node_id1: int, node_id2: int) -> bool:
         l1, l2 = self.nodes.get(node_id1), self.nodes.get(node_id2)
         if l1 != None and l2 != None:       # check if the node exist
             l3 = l1.get_neighbors().get(node_id2)
@@ -160,11 +160,11 @@ class Node:
     @param tag - the tag use for algorithm
     @param info - the info use for algorithm
     """
-    def __init__(self, key=0, tag=0, info=None):
+    def __init__(self, key: int = 0, tag: float = 0, info: str = None):
         self.key = key
         self.tag = tag
         self.info = info
-        self.pos = ()
+        self.pos = (0, 0, 0)
         self.neighbor_objects = {}     # represents all the edges that start from him <ID , node>
         self.neighbor_weight = {}      # represents all the weight of the edges <ID , weight>
         self.connect_to_him = {}       # represents all the ndoes that connect to him <ID , node>
@@ -222,7 +222,7 @@ class Node:
     @param weight of the edge
     the function add node to the dictionary of the edge
     """
-    def add_neighbor(self, other, weight):
+    def add_neighbor(self, other, weight) -> None:
         self.neighbor_objects.update({other.get_key(): other})
         self.neighbor_weight.update({other.get_key(): weight})
 
@@ -230,7 +230,7 @@ class Node:
     @param id1 - ID of the node that need to update the weight
     @param weight - weight of the edge 
     """
-    def set_weight(self, id1, weight):
+    def set_weight(self, id1, weight) -> None:
         self.neighbor_weight.update({id1: weight})
 
     """
@@ -244,21 +244,21 @@ class Node:
     @param info
     the function update the info of the node
     """
-    def set_info(self, info):
+    def set_info(self, info) -> None:
         self.info = info
 
     """
     @param tag
     the function update the tag of the node
     """
-    def set_tag(self, tag):
+    def set_tag(self, tag) -> None:
         self.tag=tag
 
     """
     @param pos- tuple 
     update the pos of node in graph
     """
-    def set_pos(self, pos):
+    def set_pos(self, pos) -> None:
         self.pos= pos
 
     """
@@ -286,7 +286,7 @@ if __name__ == '__main__':
     node1.add_neighbor(node3, 3)
     node1.add_neighbor(node4, 4)
 
-    # print(node1.get_neighbors().items())
+    print(node1.str())
 
     """
     check graph
