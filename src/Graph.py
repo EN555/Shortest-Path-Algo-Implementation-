@@ -223,7 +223,6 @@ class Node:
     the function add node to the dictionary of the edge
     """
     def add_neighbor(self, other, weight):
-        print(self.neighbor_objects)
         self.neighbor_objects.update({other.get_key(): other})
         self.neighbor_weight.update({other.get_key(): weight})
 
@@ -279,9 +278,9 @@ if __name__ == '__main__':
     check node
     """
     node1 = Node(1, 0, 0)
-    node2 = Node(1, 0, 0)
-    node3 = Node(1, 0, 0)
-    node4 = Node(1, 0, 0)
+    node2 = Node(2, 0, 0)
+    node3 = Node(3, 0, 0)
+    node4 = Node(4, 0, 0)
 
     node1.add_neighbor(node2, 2)
     node1.add_neighbor(node3, 3)
