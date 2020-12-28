@@ -55,7 +55,7 @@ class Graph:
     def all_out_edges_of_node(self, id1: int) -> dict:
         l1 = self.nodes.get(id1)    # check if have node like him
         if l1 != None:
-            return self.nodes.get(id1).get_neighbors_weight().items()
+            return self.nodes.get(id1).get_neighbors_weight()
 
     """
     Adds an edge to the graph.
@@ -67,7 +67,7 @@ class Graph:
     """
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
         l1, l2 = self.nodes.get(id1), self.nodes.get(id2)
-        if l1 == None or l2 == None or weight <= 0 or l1.get_neighbors().get(id1) == None:     # check if the node exist
+        if l1 == None or l2 == None or weight <= 0:     # check if the node exist
             return False                                                        # and the edge not exist
         else:       # if they already have not edge
             l1.add_neighbor(l2, weight)  # add to his neighbor edge
@@ -145,6 +145,11 @@ class Graph:
                 return True
         else:       # if have nothing to be remove
             return False
+        
+    def __str__(self):
+        return(str([node for node in self.get_all_v().values()]))
+    def __repr__(self):
+        return(str([node for node in self.get_all_v().values()]))    
 
 
 """
@@ -162,7 +167,6 @@ class Node:
     """
     def __init__(self, key=0, tag=0, info=None):
         self.key = key
-        print(self.key)
         self.tag = tag
         self.info = info
         self.pos = ()
@@ -265,12 +269,24 @@ class Node:
     """
     @return the key of node and all hos neighbors
     """
-    def str(self):
+    def __str__(self):
         s = []
         for key in self.get_neighbors().keys():
             s.append(key)
-        return "The key is: ", self.key, "The neighbor is: ", s
+        return ("The key is: "  + str(self.key) +  " ,The neighbors are: " +  str(s))
+    
+    def __repr__(self):
+        s = []
+        for key in self.get_neighbors().keys():
+            s.append(key)
+        return ("The key is: "  + str(self.key) +  " ,The neighbors are: " +  str(s))
 
+    def __lt__(self , other) -> bool:
+        return self.tag < other.tag
+    
+    def __gt__(self , other) -> bool:
+        return self.tag > other.tag
+    
 
 if __name__ == '__main__':
 
@@ -310,6 +326,10 @@ if __name__ == '__main__':
     # print(graph.get_all_v())
 
     graph.remove_node(3)
+    
+    node = Node(1)
+    
+    print(graph)
 
     # print("The number of nodes is: ", graph.v_size())
 
