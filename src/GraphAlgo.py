@@ -67,23 +67,23 @@ class GraphAlgo(GraphAlgoInterface):
 
 
 if __name__ == '__main__':
-    graph = Graph()
-    
-    graph.add_node(0)
-    graph.add_node(1)
-    graph.add_node(2)
-    graph.add_node(3)
-    
-    graph.add_edge(0, 1, 1)
-    graph.add_edge(1, 2, 2)
-    graph.add_edge(2, 3, 3)
-    graph.add_edge(0, 2, 10)
-    graph.add_edge(2, 0, 5)
-    
-    ga = GraphAlgo(graph)
-    
-    tuple_ans = ga.shortest_path(3, 2)
-    print(tuple_ans)
+        graph = Graph()
+        
+        graph.add_node(0)
+        graph.add_node(1)
+        graph.add_node(2)
+        graph.add_node(3)
+        
+        graph.add_edge(0, 1, 1)
+        graph.add_edge(1, 2, 2)
+        graph.add_edge(2, 3, 3)
+        graph.add_edge(0, 2, 10)
+        graph.add_edge(2, 0, 5)
+        
+        ga = GraphAlgo(graph)
+        
+        tuple_ans = ga.shortest_path(3, 2)
+        print(tuple_ans)
     
     
     
