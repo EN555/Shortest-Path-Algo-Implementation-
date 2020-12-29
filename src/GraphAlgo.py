@@ -82,7 +82,7 @@ if __name__ == '__main__':
     
     ga = GraphAlgo(graph)
     
-    tuple_ans = ga.shortest_path(3, 2)
+    tuple_ans = ga.shortest_path(0, 3)
     print(tuple_ans)
     
     

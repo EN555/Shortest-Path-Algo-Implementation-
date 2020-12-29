@@ -76,12 +76,12 @@ class GraphTest(unittest.TestCase):
     def test_time_bigGraph(self):
         start = time.time()
         graph = Graph()
-        for i in range(100000):
+        for i in range(10000):
             graph.add_node(i, (i, i+1, i+2))
-            for j in range(1000):
+            for j in range(100):
                 graph.add_edge(j, j+1, 3)
         end = time.time()
-        self.assertTrue((end -start) < 10, "it's too much time!!")
+        self.assertTrue((end - start) < 10, "it's too much time!!")
 
 if __name__ == '__main__':
     unittest.main()
