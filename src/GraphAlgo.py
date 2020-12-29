@@ -4,6 +4,8 @@ from GraphAlgoInterface import GraphAlgoInterface
 from GraphInterface import GraphInterface
 import heapq
 from Graph import Graph
+from Graph import Node
+import json
 
 class GraphAlgo(GraphAlgoInterface):
     
@@ -55,16 +57,106 @@ class GraphAlgo(GraphAlgoInterface):
         return ((self.graph.get_all_v()[id2].get_tag() , path))
         
         
+        
+        
+    def __dfs(self, node : Node , way : str, visited : dict) -> None:
+        node.set_tag(node.get_tag() + 1)
+        visited.update({node.get_key() : node})
+        
+        if(way == 'front'):
+            for nei in node.get_neighbors().values():
+                if(nei.get_key() not in visited.keys()):
+                    self.__dfs(nei , way , visited)
+        if(way == 'back'):
+            for nei in node.get_connect_to_him().values():
+                if(nei.get_key() not in visited.keys()):
+                    self.__dfs(nei , way , visited)
     
-   
+    
+    def __find_component(self , node : Node):
+        for n in self.graph.get_all_v().values():
+            n.set_tag(0)
+            
+        self.__dfs(node, 'front', {})
+        self.__dfs(node, 'back', {})
+        
+        component = []
+        for n in self.graph.get_all_v().values():
+            if(n.get_tag() == 2):
+                component.append(n.get_key())
+                n.set_info("in component")
+        
+        return component
+                
+    
+    def connected_components(self) -> list:
+       
+        for node in self.graph.get_all_v().values():
+            node.set_info("")
+        
+        components = []
+        
+        for node in self.graph.get_all_v().values():
+            if(node.get_info() == ""):
+                components.append(self.__find_component(node))
+
+        return components
+
+    def connected_component(self, id1: int) -> list:
+        if(id1 not in self.graph.get_all_v().keys()):
+            return None
+        
+        components = self.connected_components()
+        for component in components:
+            if id1 in component:
+                return component
 
 
+    def save_to_json(self, file_name: str) -> bool:
+        nodes = []
+        for node in self.graph.get_all_v().values():
+            nodes.append({'id' : node.get_key() , 
+                          'pos' : str(node.get_pos()[0]) + ',' 
+                          + str(node.get_pos()[1]) 
+                          + ',' + str(node.get_pos()[2])})
+        edges = []
+        for node in self.graph.get_all_v().values():
+            for  nei in node.get_neighbors().values():
+                edges.append({'src' : node.get_key() , 
+                              'dest' : nei.get_key(), 
+                              'w' : node.get_neighbors_weight()[nei.get_key()]})
+        json_dict = {'Nodes' : nodes , 'Edges' : edges}
+        try:
+            with open(file_name , 'w') as file:
+                json.dump(json_dict,file)
+        except:
+            return False
+        
+        return True
 
-
-
-
-
-
+    def load_from_json(self, file_name: str) -> bool:
+       
+        try:
+            with open(file_name, 'r') as file:
+                json_dict = json.load(file)
+        except:
+            return False
+        
+        new_graph = Graph()
+        
+        for json_node in json_dict.get('Nodes'):
+            if(json_node.get('pos') is not None):
+                new_graph.add_node(json_node['id'] , 
+                                   tuple([float(x) for x in json_node['pos'].split(',')]))   
+            else:
+                new_graph.add_node(json_node['id'])
+        
+        for json_edge in json_dict.get('Edges'):
+            new_graph.add_edge(json_edge['src'] , json_edge['dest'], json_edge['w'])
+                
+        self.graph = new_graph
+        return True
+            
 
 if __name__ == '__main__':
         graph = Graph()
@@ -82,8 +174,20 @@ if __name__ == '__main__':
         
         ga = GraphAlgo(graph)
         
-        tuple_ans = ga.shortest_path(3, 2)
-        print(tuple_ans)
+        
+        #tuple_ans = ga.shortest_path(3, 2)
+        #print(tuple_ans)
+        
+        #print(ga.connected_components())
+        #ga1 = GraphAlgo(Graph())
+        #print(ga1.connected_components())
+        
+        #print(ga.connected_component(1))
+        
+        #ga.save_to_json("../test1.txt")
+        
+        print(ga.load_from_json('../data/T0.json'))
+        print(ga.get_graph())
     
     
     

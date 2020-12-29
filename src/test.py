@@ -20,8 +20,6 @@ class B:
 
 
 if __name__ == '__main__':
-   arr = [[2],[1],[3]]
-   arr2 = arr.copy()
-   heapq.heapify(arr2)
-   
-   print(arr)
+   str1 = "1,2,3"
+   tuple1 = tuple([float(x) for x in str1.split(',')])
+   print(tuple1)

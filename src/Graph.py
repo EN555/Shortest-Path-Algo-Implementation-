@@ -138,8 +138,8 @@ class Graph(GraphInterface):
         if l1 != None and l2 != None:       # check if the node exist
             l3 = l1.get_neighbors().get(node_id2)
             if l3 != None:              # check if the edge exist
-                l1.get_neighbors().pop(node_id1)  # remove the the edge from he start
-                l1.get_neighbors_weight.pop(node_id1)   # remove the weight of the edge from the graph
+                l1.get_neighbors().pop(node_id2)  # remove the the edge from he start
+                l1.get_neighbors_weight().pop(node_id2)   # remove the weight of the edge from the graph
                 l2.get_connect_to_him().pop(node_id1)  # remove the edge from he point on
                 self.Number_Of_edges -= 1   # update the number of edges
                 self.Number_Of_modes += 1   # update the number of modes
