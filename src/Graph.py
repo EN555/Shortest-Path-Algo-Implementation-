@@ -1,10 +1,10 @@
-from src.GraphInteface import GraphInteface
+from src.GraphInterface import GraphInterface
 """
 This graph represent directed weighted graph
 """
 
 
-class Graph(GraphInteface):
+class Graph(GraphInterface):
 
     """
     constructor
@@ -67,13 +67,14 @@ class Graph(GraphInteface):
     """
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
         l1, l2 = self.nodes.get(id1), self.nodes.get(id2)
-        if l1 == None or l2 == None or weight <= 0:     # check if the node exist
+        if l1 == None or l2 == None or weight < 0 or id1 == id2:     # check if the node exist
             return False                                                        # and the edge not exist
         else:       # if they already have not edge
             l1.add_neighbor(l2, weight)  # add to his neighbor edge
             l2.get_connect_to_him().update({id1: l1})   # update at who the he direct to him
             self.Number_Of_edges += 1
             self.Number_Of_modes += 1
+            return True
 
     """
     Adds a node to the graph.
@@ -84,7 +85,7 @@ class Graph(GraphInteface):
     """
     def add_node(self, node_id: int, pos: tuple = (0, 0, 0)) -> bool:
         l1 = self.nodes.get(node_id)
-        if l1 != None:      # check if the node already exist
+        if l1 != None or node_id < 0:      # check if the node already exist
             return False
         else:       # the node didn't exist yet
             node = Node(node_id, 0, "")    # create new node
@@ -111,7 +112,7 @@ class Graph(GraphInteface):
     def remove_node(self, node_id: int) -> bool:
         l1 = self.nodes.get(node_id)
         if l1 == None:            # no such node
-            return True
+            return False
         else:              # if this node exist
             for to_him in l1.get_connect_to_him().values():    # remove all the edges that direct to this node
                 to_him.get_neighbors().pop(node_id)
@@ -148,6 +149,7 @@ class Graph(GraphInteface):
         
     def __str__(self):
         return(str([node for node in self.get_all_v().values()]))
+
     def __repr__(self):
         return(str([node for node in self.get_all_v().values()]))    
 
@@ -257,17 +259,17 @@ class Node:
     the function update the tag of the node
     """
     def set_tag(self, tag) -> None:
-        self.tag=tag
+        self.tag = tag
 
     """
     @param pos- tuple 
     update the pos of node in graph
     """
     def set_pos(self, pos) -> None:
-        self.pos= pos
+        self.pos = pos
 
     """
-    @return the key of node and all hos neighbors
+    @return the key of node and all his neighbors
     """
     def __str__(self):
         s = []
@@ -322,4 +324,3 @@ if __name__ == '__main__':
     # graph.remove_edge(4,1)
     #
     # print("The number of edges is: ", graph.e_size())
-
