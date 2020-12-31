@@ -1,4 +1,5 @@
 from src.GraphInterface import GraphInterface
+import random as rnd
 """
 This graph represent directed weighted graph
 """
@@ -240,6 +241,12 @@ class Node:
     def set_weight(self, id1, weight) -> None:
         self.neighbor_weight.update({id1: weight})
 
+    """
+    @param id1 - ID of the node that need to update the weight
+    @param weight - weight of the edge 
+    """
+    def set_pos(self, pos) -> None:
+        self.pos = pos
     """
     @param other - node neighbor 
     return the weight if the node

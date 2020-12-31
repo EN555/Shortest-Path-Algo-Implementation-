@@ -5,8 +5,13 @@ from GraphInterface import GraphInterface
 from typing import List
 from Graph import Graph
 from Graph import Node
+import math
 import heapq
 import json
+import numpy as np
+import matplotlib.pyplot as plt
+import networkx as nx
+import random as rnd
 
 class GraphAlgo(GraphAlgoInterface):
     """ this class is a set of algorithms on an directed weighted graph, 
@@ -135,11 +140,11 @@ class GraphAlgo(GraphAlgoInterface):
 
     def save_to_json(self, file_name: str) -> bool:
         """ save the graph into a json file. return if the graph was saved successfuly"""
-        
+
         nodes = []  #the list of nodes
         for node in self.graph.get_all_v().values():    #for each node in the graph
             nodes.append({'id' : node.get_key() ,               #save the data in json format
-                          'pos' : str(node.get_pos()[0]) + ',' 
+                          'pos' : str(node.get_pos()[0]) + ','
                           + str(node.get_pos()[1]) 
                           + ',' + str(node.get_pos()[2])})
         
@@ -182,42 +187,84 @@ class GraphAlgo(GraphAlgoInterface):
                 
         self.graph = new_graph  #set the new grah
         return True
-            
+
+    def plot_graph(self) -> None:
+        G = nx.DiGraph()
+        x_min, x_max, y_min, y_max = math.inf, -math.inf, math.inf, -math.inf
+        for pos in self.graph.get_all_v().values(): # find the nim and max of the positions
+             if pos.get_pos()[0] < x_min:
+                 x_min = pos.get_pos()[0]
+             if pos.get_pos()[0] > x_max:
+                 x_max = pos.get_pos()[0]
+             if pos.get_pos()[1] < y_min:
+                 y_min = pos.get_pos()[1]
+             if pos.get_pos()[1] > y_max:
+                 y_max = pos.get_pos()[1]
+        print(x_min, x_max, y_min, y_max)
+        for i in self.graph.get_all_v().keys():
+            pos_loc = self.get_graph().get_all_v().get(i).get_pos()
+            if pos_loc == (0, 0, 0):
+                pos_loc = (rnd.random(), rnd.random(), rnd.random())
+            else:
+                pos_loc = ((pos_loc[0]-x_min)/(x_max - x_min), (pos_loc[1]-y_min)/(y_max - y_min))
+            print(pos_loc)
+            G.add_node(i, pos=pos_loc[0:2])
+        for i in self.graph.get_all_v().keys():
+            for j in self.graph.all_out_edges_of_node(i).keys():
+                G.add_edge(i, j)
+        pos = nx.get_node_attributes(G, 'pos')
+        nx.draw(G, pos, with_labels=True, font_weight='bold')
+        plt.show()
 
 if __name__ == '__main__':
 
     graph = Graph()
-    graph.add_node(0)
+    graph.add_node(0, (1, 200))
     graph.add_node(1)
-    graph.add_node(2)
-    graph.add_node(3)
+    graph.add_node(2, (4543, 4455))
+    graph.add_node(3, (7544, 5442))
+    graph.add_node(4, (155, 266))
+    graph.add_node(5)
+    graph.add_node(6, (16670, 711))
+    graph.add_node(7, (162, 34))
+    graph.add_node(8)
+
     
     graph.add_edge(0, 1, 1)
     graph.add_edge(1, 2, 2)
     graph.add_edge(2, 3, 3)
     graph.add_edge(0, 2, 10)
     graph.add_edge(2, 0, 5)
-    
+    graph.add_edge(3, 5, 5)
+    graph.add_edge(5, 3, 5)
+    graph.add_edge(6, 6, 5)
+    graph.add_edge(3,8, 5)
+    graph.add_edge(7, 3, 5)
+    graph.add_edge(8, 2, 5)
+    graph.add_edge(8, 5, 5)
+    graph.add_edge(4,6, 5)
+    graph.add_edge(4,8, 5)
+
     ga = GraphAlgo(graph)
-    
-    tuple_ans = ga.shortest_path(0, 3)
-    print(tuple_ans)
-    graph = Graph()
-        
-    graph.add_node(0)
-    graph.add_node(1)
-    graph.add_node(2)
-    graph.add_node(3)
-        
-    graph.add_edge(0, 1, 1)
-    graph.add_edge(1, 2, 2)
-    graph.add_edge(2, 3, 3)
-    graph.add_edge(0, 2, 10)
-    graph.add_edge(2, 0, 5)
+
+    # tuple_ans = ga.shortest_path(0, 3)
+    # print(tuple_ans)
+    # graph = Graph()
+    #
+    # graph.add_node(0)
+    # graph.add_node(1)
+    # graph.add_node(2)
+    # graph.add_node(3)
+    #
+    # graph.add_edge(0, 1, 1)
+    # graph.add_edge(1, 2, 2)
+    # graph.add_edge(2, 3, 3)
+    # graph.add_edge(0, 2, 10)
+    # graph.add_edge(2, 0, 5)
         
     ga = GraphAlgo(graph)
-        
-        
+    ga.plot_graph()
+
         #tuple_ans = ga.shortest_path(3, 2)
         #print(tuple_ans)
         
