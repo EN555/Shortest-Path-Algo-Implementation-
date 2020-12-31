@@ -200,14 +200,18 @@ class GraphAlgo(GraphAlgoInterface):
                  y_min = pos.get_pos()[1]
              if pos.get_pos()[1] > y_max:
                  y_max = pos.get_pos()[1]
+        # debug
         print(x_min, x_max, y_min, y_max)
+        ###
         for i in self.graph.get_all_v().keys():
             pos_loc = self.get_graph().get_all_v().get(i).get_pos()
             if pos_loc == (0, 0, 0):
                 pos_loc = (rnd.random(), rnd.random(), rnd.random())
             else:
                 pos_loc = ((pos_loc[0]-x_min)/(x_max - x_min), (pos_loc[1]-y_min)/(y_max - y_min))
+           # debug
             print(pos_loc)
+            ###
             G.add_node(i, pos=pos_loc[0:2])
         for i in self.graph.get_all_v().keys():
             for j in self.graph.all_out_edges_of_node(i).keys():
