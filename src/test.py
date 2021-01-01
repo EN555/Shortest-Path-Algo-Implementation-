@@ -10,6 +10,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
+import time
 
 
 class A:
@@ -25,5 +26,4 @@ class B:
 
 
 if __name__ == '__main__':
-    #plt.plot(np.arange(1,100,0.1),[math.log(x) for x in np.arange(1,100,0.1)])
-    print("hi")
+    

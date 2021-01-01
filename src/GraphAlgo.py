@@ -60,7 +60,7 @@ class GraphAlgo(GraphAlgoInterface):
         return the path distance and a list representing the path"""
         
         #make sure the nodes exist in the graph
-        if(self.graph.get_all_v()[id1] == None or self.graph.get_all_v()[id2] == None):
+        if(self.graph.get_all_v().get(id1) == None or self.graph.get_all_v().get(id2) == None):
             return None
         
         parents = self.__Dijkstra(id1)  #run dijkstra algorighm
@@ -223,14 +223,14 @@ class GraphAlgo(GraphAlgoInterface):
 if __name__ == '__main__':
 
     graph = Graph()
-    graph.add_node(0, (1, 200))
+    graph.add_node(0)#, (1, 200))
     graph.add_node(1)
-    graph.add_node(2, (4543, 4455))
-    graph.add_node(3, (7544, 5442))
-    graph.add_node(4, (155, 266))
+    graph.add_node(2)#, (4543, 4455))
+    graph.add_node(3)#, (7544, 5442))
+    graph.add_node(4)#, (155, 266))
     graph.add_node(5)
-    graph.add_node(6, (16670, 711))
-    graph.add_node(7, (162, 34))
+    graph.add_node(6)#, (16670, 711))
+    graph.add_node(7)#, (162, 34))
     graph.add_node(8)
 
     

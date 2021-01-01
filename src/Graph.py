@@ -152,7 +152,12 @@ class Graph(GraphInterface):
         return(str([node for node in self.get_all_v().values()]))
 
     def __repr__(self):
-        return(str([node for node in self.get_all_v().values()]))    
+        return(str([node for node in self.get_all_v().values()])) 
+    
+    def __eq__(self, o):
+        if  not isinstance(o, Graph):
+            return False
+        return self.get_all_v() == o.get_all_v()
 
 
 """
@@ -295,6 +300,11 @@ class Node:
     
     def __gt__(self , other) -> bool:
         return self.tag > other.tag
+    
+    def __eq__(self, o):
+        if not isinstance(o , Node):
+            return False
+        return (self.key == o.get_key()) and (self.get_neighbors_weight() == o.get_neighbors_weight())
     
 
 if __name__ == '__main__':
