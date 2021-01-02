@@ -266,7 +266,7 @@ if __name__ == '__main__':
     # graph.add_edge(0, 2, 10)
     # graph.add_edge(2, 0, 5)
         
-    ga = GraphAlgo(graph)
+    # ga = GraphAlgo(graph)
     ga.plot_graph()
 
         #tuple_ans = ga.shortest_path(3, 2)
