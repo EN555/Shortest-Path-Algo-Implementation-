@@ -4,7 +4,7 @@
 
 This illustration exhibit all the classes and their dependencies.
 
-![image](https://user-images.githubusercontent.com/61500507/103580534-0a2a0200-4ee3-11eb-8f42-622740539411.png)
+![image](https://user-images.githubusercontent.com/61500507/103583081-c5ed3080-4ee7-11eb-91fb-62a8e75c2138.png)
 
 The three classes is the **DiGraph** and **GraphAlgo** and **Node**.
 
