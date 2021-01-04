@@ -1,6 +1,6 @@
 import unittest
 import time
-from src.Graph import Node
+from src.DiGraph import Node
 
 
 class NodeTest(unittest.TestCase):
