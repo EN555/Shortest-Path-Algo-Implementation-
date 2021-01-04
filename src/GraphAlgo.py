@@ -103,7 +103,7 @@ class GraphAlgo(GraphAlgoInterface):
             if node.get_info() == Color.WHITE.name:  # if the color is white first need to update the color
                 node.set_info(Color.GREY.name)
                 node.set_tag(self.time_out)
-                ls_nei.append(node.get_key())
+                ls_nei.append(node)
                 self.time_out += 1
             for nei in node.get_neighbors().values():   # if it's was grey or white need to check his neighbors
                 if nei.get_info() == Color.WHITE.name:
@@ -124,7 +124,7 @@ class GraphAlgo(GraphAlgoInterface):
             graph_transpose.add_node(node)
         for node in self.get_graph().get_all_v().values():    # create all the transpose edges
             for key in node.get_neighbors().keys():
-                    graph_transpose.add_edge(key, node.get_key(),0)
+                    graph_transpose.add_edge(key, node.get_key(),1)
         return graph_transpose
 
     def connected_components(self) -> List[list]:
@@ -151,9 +151,9 @@ class GraphAlgo(GraphAlgoInterface):
             return None
         comp_list = self.connected_components()   # list of list of all SCC
         for arr in comp_list:   # search at which scc id1 is in
-           if id1 in arr:
-                return arr  # return the specific component in the graph
-
+           for i in arr:
+                if self.graph.get_all_v().get(id1).get_key() == id1:
+                    return arr  # return the specific component in the graph
 
     def save_to_json(self, file_name: str) -> bool:
         """ save the graph into a json file. return if the graph was saved successfuly"""
@@ -339,8 +339,8 @@ if __name__ == '__main__':
     graph.add_edge(2, 0, 5)
     graph.add_edge(0, 2, 2.3)
     ga = GraphAlgo(graph)
-    print(ga.connected_components())
-
+    # print(ga.connected_components())
+    print(ga.connected_component(1))
 
 
     # tuple_ans = ga.shortest_path(0, 3)
