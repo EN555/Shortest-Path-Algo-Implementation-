@@ -4,8 +4,6 @@
 
 This illustration exhibit all the classes and their dependencies.
 
-![image](https://user-images.githubusercontent.com/61500507/103579504-11e8a700-4ee1-11eb-9827-a7ee79151f38.png)
-
 Tthe three classes is the **DiGraph** and **GraphAlgo**.
 
 The **Node** represent single node in graph, for every node have special key, and all her neighbors.
