@@ -22,8 +22,6 @@ class GraphAlgo(GraphAlgoInterface):
     including findind the shortest path beetwen two nodes, 
     finding storngly connected components, saving and loading a graph from a json file
     """
-    time_out =0
-    dict_help = {}
 
     def __init__(self , graph : GraphInterface = None) -> None:
         """ constructor , set the graph for the algorighms to work on"""
