@@ -11,19 +11,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 import time
+from threading import *
 
 
-class A:
-    def __init__(self):
-        self.a = 23
-    def __str__(self):
-        return str(self.a)
-class B:
-    def __init__(self , aa):
-        self.a = aa
-    def __str__(self):
-        return str(self.a)
+def is_prime(n:int) -> bool:
+    
+    if n==0 or n==1 or n==-1:
+        return False
+    
+    for i in range(2,int(math.sqrt(abs(n))) + 1):
+        if((n % i) == 0):
+            return False
+    return True
+
 
 
 if __name__ == '__main__':
-    
+    x = []
+    for i in range(-10000,10000):
+        if is_prime(i):
+            x.append(i)
+    plt.scatter(x,x,s=0.1)
+    print(x)
+    #print(is_prime(15))
