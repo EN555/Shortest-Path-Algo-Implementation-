@@ -4,11 +4,13 @@
 
 This illustration exhibit all the classes and their dependencies.
 
-Tthe three classes is the **DiGraph** and **GraphAlgo**.
+![image](https://user-images.githubusercontent.com/61500507/103580534-0a2a0200-4ee3-11eb-8f42-622740539411.png)
+
+The three classes is the **DiGraph** and **GraphAlgo**.
 
 The **Node** represent single node in graph, for every node have special key, and all her neighbors.
 
-The **Graph** class complicated from Node and Edge, in the class the node of the graph and the edges keep in two different hashmap. 
+The **DiGraph** class complicated from Node and Edge, in the class the node of the graph and the edges keep in two different hashmap. 
 You can operate sum operation on teh graph, you can removeNode, you can AddNode , you can conncet between two nodes and put weight for the edge.
 
 To read more on graph operation [Press Here!](https://github.com/EN555/ex2/wiki/Graph)
