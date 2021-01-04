@@ -103,7 +103,7 @@ class GraphAlgo(GraphAlgoInterface):
             if node.get_info() == Color.WHITE.name:  # if the color is white first need to update the color
                 node.set_info(Color.GREY.name)
                 node.set_tag(self.time_out)
-                ls_nei.append(node)
+                ls_nei.append(node.get_key())
                 self.time_out += 1
             for nei in node.get_neighbors().values():   # if it's was grey or white need to check his neighbors
                 if nei.get_info() == Color.WHITE.name:
@@ -151,8 +151,7 @@ class GraphAlgo(GraphAlgoInterface):
             return None
         comp_list = self.connected_components()   # list of list of all SCC
         for arr in comp_list:   # search at which scc id1 is in
-           for i in arr:
-                if self.graph.get_all_v().get(id1).get_key() == id1:
+            if id1 in arr:
                     return arr  # return the specific component in the graph
 
     def save_to_json(self, file_name: str) -> bool:
