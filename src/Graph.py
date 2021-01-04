@@ -256,8 +256,8 @@ class Node:
     @param other - node neighbor 
     return the weight if the node
     """
-    def get_weight(self, other) -> float:
-        return self.get_neighbors_weight().get(other.get_key)
+    def get_weight(self, other: object = None) -> float:
+        return self.neighbor_weight.get(other.get_key())
 
     """
     @param info
