@@ -83,13 +83,13 @@ class GraphAlgo(GraphAlgoInterface):
         return ((self.graph.get_all_v()[id2].get_tag() , path)) #return the distance and thee path
 
 
-    def __dfs_alg(self, arr: list =[], graph: Graph = None)-> list[list]:  # tag- d[v], weight- f[v], info- visited, graph - curr graph
+    def __dfs_alg(self, arr: list =[], graph: Graph = None)-> List[list]:  # tag- d[v], weight- f[v], info- visited, graph - curr graph
         """ param arr: the order of the move on all the nodes
         param graph: get graph at the first time get original graph and after that get transpose graph
         return: list of all ths scc in the graph
         """
         for node in graph.get_all_v().values():  # move on all the nodes in the graph and initial their parameter
-            node.set_tag(0), node.set_info(Color.WHITE.name), self.dict_help.update({node.get_key: 0})
+            node.set_tag(0), node.set_info(Color.WHITE.name), self.dict_help.update({node.get_key(): 0})
         self.time_out =0    # init the time of the dfs algorithm in the graph
         scc = []  # init the list of all the scc of the graph
         for node in arr:    # move on all the nodes of the graph according to the order
@@ -99,7 +99,7 @@ class GraphAlgo(GraphAlgoInterface):
         return scc
 
 
-    def __dfs_rec(self, node: Node = None, ls_nei: list = []):   # run dfs from specific node
+    def __dfs_rec(self, node: Node = None, ls_nei: list = []) -> List[Node]:   # run dfs from specific node
             if node.get_info() == Color.WHITE.name:  # if the color is white first need to update the color
                 node.set_info(Color.GREY.name)
                 node.set_tag(self.time_out)
