@@ -17,7 +17,7 @@ the graph is directed weighted graph, in GraphAlgo class have the plot of the gr
 
 ![image](https://user-images.githubusercontent.com/61500507/103581407-a43e7a00-4ee4-11eb-9c24-3646662b38e4.png)
 
-To read more on graph operation [Press Here!](https://github.com/EN555/ex2/wiki/Graph)
+To read more on graph operation [Press Here!](https://github.com/EN555/ex3/wiki/The-Graph)
 
 The **Graph Algo** class composed of graph class, you need to initial the class with graph, and you can operate on her some operation.
 
