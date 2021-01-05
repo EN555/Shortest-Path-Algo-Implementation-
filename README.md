@@ -24,4 +24,4 @@ The **Graph Algo** class composed of graph class, you need to initial the class 
 In this class you can find the shortestpath from src to other destination, you can found all the strongly component of the graph, you can too find tha scc of specific key,
 you can export Json file of the graph that contain all the edges and the nodes of the graph, you can too read Json file and load the class with him.
 
-To read more on graph operation [Press Here!](https://github.com/EN555/ex2/wiki/Algorithms)
+To read more on graph operation [Press Here!](https://github.com/EN555/ex3/wiki/The-Algo)
