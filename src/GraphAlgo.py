@@ -22,12 +22,12 @@ class GraphAlgo(GraphAlgoInterface):
     including findind the shortest path beetwen two nodes, 
     finding storngly connected components, saving and loading a graph from a json file
     """
-    time_out =0
-    dict_help = {}
 
     def __init__(self , graph : GraphInterface = None) -> None:
         """ constructor , set the graph for the algorighms to work on"""
         self.graph = graph
+        self.time_out =0
+        self.dict_help = {}
     
     def get_graph(self) -> GraphInterface:
         """return: the directed graph on which the algorithm works on"""
@@ -83,64 +83,51 @@ class GraphAlgo(GraphAlgoInterface):
         return ((self.graph.get_all_v()[id2].get_tag() , path)) #return the distance and thee path
 
 
-    def __dfs_alg(self, arr: list =[], graph: Graph = None)-> List[list]:  # tag- d[v], weight- f[v], info- visited, graph - curr graph
+    def __dfs_alg(self, arr: list =[], way : str = 'front')-> List[list]:  # tag- d[v], weight- f[v], info- visited, graph - curr graph
         """ param arr: the order of the move on all the nodes
         param graph: get graph at the first time get original graph and after that get transpose graph
         return: list of all ths scc in the graph
         """
-        for node in graph.get_all_v().values():  # move on all the nodes in the graph and initial their parameter
+
+        for node in self.graph.get_all_v().values():  # move on all the nodes in the graph and initial their parameter
             node.set_tag(0), node.set_info(Color.WHITE.name), self.dict_help.update({node.get_key(): 0})
         self.time_out =0    # init the time of the dfs algorithm in the graph
         scc = []  # init the list of all the scc of the graph
-        for node in arr:    # move on all the nodes of the graph according to the order
+        for node_key in arr:    # move on all the nodes of the graph according to the order
+            node = self.graph.get_all_v().get(node_key)
             if node.get_info() == Color.WHITE.name: # check if the color is white it's represent the never visit there
                 node.set_tag(self.time_out)
-                scc.append(self.__dfs_rec(node, []))    # keep th scc in the list
+                scc.append(self.__dfs_rec(node, [] , way))    # keep th scc in the list
         return scc
 
 
-    def __dfs_rec(self, node: Node = None, ls_nei: list = []) -> List[Node]:   # run dfs from specific node
+
+    def __dfs_rec(self, node: Node = None, ls_nei: list = [] , way: str = 'front'):   # run dfs from specific node
             if node.get_info() == Color.WHITE.name:  # if the color is white first need to update the color
                 node.set_info(Color.GREY.name)
                 node.set_tag(self.time_out)
                 ls_nei.append(node.get_key())
                 self.time_out += 1
-            for nei in node.get_neighbors().values():   # if it's was grey or white need to check his neighbors
-                if nei.get_info() == Color.WHITE.name:
-                    self.__dfs_rec(nei, ls_nei)   # the function will stop when that won't fount white node
+            if(way == 'front'):
+                for nei in node.get_neighbors().values():   # if it's was grey or white need to check his neighbors
+                   if nei.get_info() == Color.WHITE.name:
+                       self.__dfs_rec(nei, ls_nei , way)   # the function will stop when that won't fount white node
+            else:
+                for nei in node.get_connect_to_him().values():   # if it's was grey or white need to check his neighbors
+                   if nei.get_info() == Color.WHITE.name:
+                       self.__dfs_rec(nei, ls_nei , way)   # the function will stop when that won't fount white node
             node.set_info(Color.BLACK.name)
             self.dict_help.update({node.get_key(): self.time_out})  # <key, finish time>
             self.time_out += 1
             return ls_nei
 
-    """
-    @param current graph
-    @return transpose graph (put attention, the new graph is simple transpose graph without all the
-    the data that in the original graph
-    """
-    def __trans_graph(self):
-        graph_transpose = Graph()
-        for node in self.get_graph().get_all_v().keys():    # add all the node to the new graph
-            graph_transpose.add_node(node)
-        for node in self.get_graph().get_all_v().values():    # create all the transpose edges
-            for key in node.get_neighbors().keys():
-                    graph_transpose.add_edge(key, node.get_key(),1)
-        return graph_transpose
 
     def connected_components(self) -> List[list]:
-        """@param current graph
-        @return transpose graph (put attention, the new graph is simple transpose graph without all the
-        the data that in the original graph"""
-        scc= []
-        self.__dfs_alg(self.graph.get_all_v().values(), self.graph)     # first call dfs on the original graph
-        graph = self.__trans_graph()    # transpose the current graph
-        finish_time_order = {}
-        for i in self.graph.get_all_v().values():   # create W^T graph
-            finish_time_order.update({self.dict_help.get(i.get_key()): graph.get_all_v().get(i.get_key())}) # <finish time, node object>
-        sort_list = []
-        for i in sorted(finish_time_order.keys()):  # sort all the nodes according to their finish time
-            sort_list.insert(0, finish_time_order.get(i))
-        scc = self.__dfs_alg(sort_list, graph)  # second call dfs
+        """  Finds all the Strongly Connected Component(SCC) in the graph , represented by list of lists"""
+        self.__dfs_alg(self.graph.get_all_v().keys(), 'front')     # first call dfs on the original graph
+        sort_list = list(self.graph.get_all_v().keys()).copy()  #get list of nodes
+        sort_list.sort(key = lambda x : self.dict_help.get(x) , reverse=True)   #sort list by desending finishing times
+        scc = self.__dfs_alg(sort_list, 'back')  # second call dfs
         return scc  # return all the scc of the graph
 
 
@@ -260,72 +247,46 @@ class Color(Enum):
 if __name__ == '__main__':
 
 # =============================================================================
-#     graph = Graph()
-#     graph.add_node(0)#, (1, 200))
-#     graph.add_node(1)
-#     graph.add_node(2)#, (4543, 4455))
-#     graph.add_node(3)#, (7544, 5442))
-#     graph.add_node(4)#, (155, 266))
-#     graph.add_node(5)
-#     graph.add_node(6)#, (16670, 711))
-#     graph.add_node(7)#, (162, 34))
-#     graph.add_node(8)
-# 
-#     
-#     graph.add_edge(0, 1, 1)
-#     graph.add_edge(1, 2, 2)
-#     graph.add_edge(2, 3, 3)
-#     graph.add_edge(0, 2, 10)
-#     graph.add_edge(2, 0, 5)
-#     graph.add_edge(3, 5, 5)
-#     graph.add_edge(5, 3, 5)
-#     graph.add_edge(6, 6, 5)
-#     graph.add_edge(3,8, 5)
-#     graph.add_edge(7, 3, 5)
-#     graph.add_edge(8, 2, 5)
-#     graph.add_edge(8, 5, 5)
-#     graph.add_edge(4,6, 5)
-#     graph.add_edge(4,8, 5)
-# =============================================================================
-
-
-    # tuple_ans = ga.shortest_path(0, 3)
-    # print(tuple_ans)
     graph = Graph()
-   
-    graph.add_node(0 ,(1,2,0))
-    graph.add_node(1,(2,2,0))
-    graph.add_node(2,(2,1,0))
-    graph.add_node(3,(1,1,0))
-    graph.add_node(4,(1,1,0))
-    graph.add_node(5,(1,1,0))
-    graph.add_node(6,(1,1,0))
-    graph.add_node(7,(1,1,0))
-
+    graph.add_node(0)#, (1, 200))
+    graph.add_node(1)
+    graph.add_node(2)#, (4543, 4455))
+    graph.add_node(3)#, (7544, 5442))
+    graph.add_node(4)#, (155, 266))
+    graph.add_node(5)
+    graph.add_node(6)#, (16670, 711))
+    graph.add_node(7)#, (162, 34))
+    graph.add_node(8)
+    for i in range(1, 50):
+        graph.add_node(i)
+    for i in range(1,30):
+        graph.add_edge(i, i+1, 1)
     graph.add_edge(0, 1, 1)
     graph.add_edge(1, 2, 2)
     graph.add_edge(2, 3, 3)
     graph.add_edge(0, 2, 10)
-    graph.add_edge(3, 0, 5)
-    graph.add_edge(2, 4, 5)
+    graph.add_edge(2, 0, 5)
+    graph.add_edge(3, 5, 5)
     graph.add_edge(5, 3, 5)
-    graph.add_edge(5, 6, 5)
-    graph.add_edge(6, 7, 5)
-    graph.add_edge(7, 5, 5)
+    graph.add_edge(6, 6, 5)
+    graph.add_edge(3,8, 5)
+    graph.add_edge(7, 3, 5)
+    graph.add_edge(8, 2, 5)
+    graph.add_edge(8, 5, 5)
+    graph.add_edge(4,6, 5)
+    graph.add_edge(4,8, 5)
 
 
 
-    # graph.add_edge(3, 5, 5)
-    # graph.add_edge(5, 3, 5)
-    # graph.add_edge(6, 6, 5)
-    # graph.add_edge(3,8, 5)
-    # graph.add_edge(7, 3, 5)
-    # graph.add_edge(8, 2, 5)
-    # graph.add_edge(8, 5, 5)
-    # graph.add_edge(4,6, 5)
-    # graph.add_edge(4,8, 5)
-
-    graph = Graph()
+    graph.add_edge(3, 5, 5)
+    graph.add_edge(5, 3, 5)
+    graph.add_edge(6, 6, 5)
+    graph.add_edge(3,8, 5)
+    graph.add_edge(7, 3, 5)
+    graph.add_edge(8, 2, 5)
+    graph.add_edge(8, 5, 5)
+    graph.add_edge(4,6, 5)
+    graph.add_edge(4,8, 5)
 
     graph.add_node(0, (1, 2, 0))
     graph.add_node(1, (2, 2, 0))
@@ -338,8 +299,9 @@ if __name__ == '__main__':
     graph.add_edge(2, 0, 5)
     graph.add_edge(0, 2, 2.3)
     ga = GraphAlgo(graph)
-    # print(ga.connected_components())
-    print(ga.connected_component(1))
+    print(ga.connected_components())
+    ga.plot_graph()
+    #print(ga.connected_component(1))
 
 
     # tuple_ans = ga.shortest_path(0, 3)
