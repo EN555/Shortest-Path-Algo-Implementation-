@@ -39,6 +39,7 @@ class GraphAlgo(GraphAlgoInterface):
         
         for node in self.graph.get_all_v().values(): #initiate all the nodes 'weights' to infinity
             node.set_tag(float('inf'))
+            node.set_info('not')
         
         src_O = self.graph.get_all_v()[src] #get the src node as a Node object
         src_O.set_tag(0)                     #set the src 'weight' to 0
@@ -50,12 +51,20 @@ class GraphAlgo(GraphAlgoInterface):
         
         while(Q):   #go thourgh all the nodes
             current = heapq.heappop(Q)  #get the 'closest' node
+            
+            if(current.get_info() != 'not'):
+                continue
+            current.set_info('yes')
+            
             for nei,weight in self.graph.all_out_edges_of_node(current.get_key()).items(): #go though the neighbors of the current node
                 nei_O = self.graph.get_all_v()[nei] #get the neighbor as a Node object
                 if(current.get_tag() + weight < nei_O.get_tag()):   #if the path though the current node is better,
                     nei_O.set_tag(current.get_tag() + weight)   # set the new 'weight'
+                    
+                    heapq.heappush(Q , nei_O)
+                    
                     parents.update({nei: current.get_key()})    #update the 'parenthood' map
-            heapq.heapify(Q)    #re-order the heap
+            #heapq.heapify(Q)    #re-order the heap
        
         return parents
     
@@ -101,25 +110,59 @@ class GraphAlgo(GraphAlgoInterface):
 
 
     def __dfs_rec(self, node: Node = None, ls_nei: list = [] , way: str = 'front'):   # run dfs from specific node
-            if node.get_info() == Color.WHITE.name:  # if the color is white first need to update the color
+
+        stack = [node]
+        while stack:
+            self.time_out = self.time_out + 1
+            node = stack[-1]
+            if (node.get_info() != Color.WHITE.name):
+                node = stack.pop()
+                if(node.get_info() == Color.GREY.name):
+                    self.dict_help.update({node.get_key() : self.time_out})
+                    node.set_info(Color.BLACK.name)
+            else:
                 node.set_info(Color.GREY.name)
                 node.set_tag(self.time_out)
                 ls_nei.append(node.get_key())
-                self.time_out += 1
-           
-            if(way == 'front'):
-                for nei in node.get_neighbors().values():   # if it's was grey or white need to check his neighbors
-                   if nei.get_info() == Color.WHITE.name:
-                       self.__dfs_rec(nei, ls_nei , way)   # the function will stop when that won't fount white node
-            else:
-                for nei in node.get_connect_to_him().values():   # if it's was grey or white need to check his neighbors
-                   if nei.get_info() == Color.WHITE.name:
-                       self.__dfs_rec(nei, ls_nei , way)   # the function will stop when that won't fount white node
-            
-            node.set_info(Color.BLACK.name)
-            self.dict_help.update({node.get_key(): self.time_out})  # <key, finish time>
-            self.time_out += 1
-            return ls_nei
+                if(way == 'front'):
+                    for nei in node.get_neighbors().values():
+                        if(nei.get_info() == Color.WHITE.name):
+                            stack.append(nei)
+                else:
+                    for nei in node.get_connect_to_him().values():
+                        if(nei.get_info() == Color.WHITE.name):
+                            stack.append(nei)
+        return ls_nei
+                    
+
+# =============================================================================
+#             stack = [node]
+#             while(stack):
+#                 current = stack.pop()
+#                 if current.get_info() == Color.WHITE.name:  # if the color is white first need to update the color
+#                     current.set_info(Color.GREY.name)
+#                     current.set_tag(self.time_out)
+#                     ls_nei.append(current.get_key())
+#                     self.time_out += 1
+#                     stack = [current] + stack
+#                     
+#                     
+#                     
+#                     if(way == 'front'):
+#                         for nei in current.get_neighbors().values():   # if it's was grey or white need to check his neighbors
+#                            if nei.get_info() == Color.WHITE.name:
+#                               stack = [nei] + stack   # the function will stop when that won't fount white node
+#                     else:
+#                         for nei in current.get_connect_to_him().values():   # if it's was grey or white need to check his neighbors
+#                            if nei.get_info() == Color.WHITE.name:
+#                                stack = [nei] + stack   # the function will stop when that won't fount white node
+#                 else:
+#                     if(current.get_key() not in self.dict_help.keys()):
+#                         self.dict_help.update({current.get_key(): self.time_out})  # <key, finish time>
+#                         self.time_out += 1
+#                 current.set_info(Color.BLACK.name)
+#             return ls_nei
+# =============================================================================
 
 
     def connected_components(self) -> List[list]:
@@ -329,6 +372,7 @@ if __name__ == '__main__':
     graph.add_edge(2, 3, 0.5)
     graph.add_edge(2, 0, 5)
     graph.add_edge(0, 2, 2.3)
+    
     ga = GraphAlgo(graph)
     print(ga.connected_components())
     #print(ga.connected_component(1))
