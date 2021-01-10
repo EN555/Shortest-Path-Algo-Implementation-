@@ -3,7 +3,7 @@
 from GraphAlgoInterface import GraphAlgoInterface
 from GraphInterface import GraphInterface
 from typing import List
-from DiGraph import Graph
+from DiGraph import DiGraph
 from DiGraph import Node
 import math
 import heapq
@@ -191,7 +191,7 @@ class GraphAlgo(GraphAlgoInterface):
         except: #if could'nt read from the file, return false
             return False
         
-        new_graph = Graph() #make a new graph
+        new_graph = DiGraph() #make a new graph
         
         for json_node in json_dict.get('Nodes'):    #get the list of nodes from the json
             if(json_node.get('pos') is not None):   #check if a position was give
@@ -257,110 +257,6 @@ class Color(Enum):
     WHITE = 1,
     BLACK = 2,
     GREY = 3
-
-
-if __name__ == '__main__':
-
-# =============================================================================
-    graph = Graph()
-    graph.add_node(0)#, (1, 200))
-    graph.add_node(1)
-    graph.add_node(2)#, (4543, 4455))
-    graph.add_node(3)#, (7544, 5442))
-    graph.add_node(4)#, (155, 266))
-    graph.add_node(5)
-    graph.add_node(6)#, (16670, 711))
-    graph.add_node(7)#, (162, 34))
-    graph.add_node(8)
-    for i in range(10, 20):
-        graph.add_node(i)
-    for i in range(10,17):
-        graph.add_edge(i, i+2, 1)
-        graph.add_edge(i, i + 3, 1)
-
-    graph.add_edge(0, 1, 1)
-    graph.add_edge(1, 2, 2)
-    graph.add_edge(2, 3, 3)
-    graph.add_edge(0, 2, 10)
-    graph.add_edge(2, 0, 5)
-    graph.add_edge(3, 5, 5)
-    graph.add_edge(5, 3, 5)
-    graph.add_edge(6, 6, 5)
-    graph.add_edge(3,8, 5)
-    graph.add_edge(7, 3, 5)
-    graph.add_edge(8, 2, 5)
-    graph.add_edge(8, 5, 5)
-    graph.add_edge(4,6, 5)
-    graph.add_edge(4,8, 5)
-
-
-
-    graph.add_edge(3, 5, 5)
-    graph.add_edge(5, 3, 5)
-    graph.add_edge(6, 6, 5)
-    graph.add_edge(3,8, 5)
-    graph.add_edge(7, 3, 5)
-    graph.add_edge(8, 2, 5)
-    graph.add_edge(8, 5, 5)
-    graph.add_edge(4,6, 5)
-    graph.add_edge(4,8, 5)
-
-    graph.add_node(0, (1, 2, 0))
-    graph.add_node(1, (2, 2, 0))
-    graph.add_node(2, (2, 1, 0))
-    graph.add_node(3, (1, 1, 0))
-
-    graph.add_edge(0, 1, 1)
-    graph.add_edge(1, 2, 2)
-    graph.add_edge(2, 3, 0.5)
-    graph.add_edge(2, 0, 5)
-    graph.add_edge(0, 2, 2.3)
-    
-    ga = GraphAlgo(graph)
-    print(ga.connected_components())
-    ga.plot_graph()
-    #print(ga.connected_component(1))
-
-
-    # tuple_ans = ga.shortest_path(0, 3)
-    # print(tuple_ans)
-    # graph = Graph()
-    #
-    # graph.add_node(0)
-    # graph.add_node(1)
-    # graph.add_node(2)
-    # graph.add_node(3)
-    #
-    # graph.add_edge(0, 1, 1)
-    # graph.add_edge(1, 2, 2)
-    # graph.add_edge(2, 3, 3)
-    # graph.add_edge(0, 2, 10)
-    # graph.add_edge(2, 0, 5)
-        
-    # ga = GraphAlgo(graph)
-
-    # ST = time.time()
-    # ga = GraphAlgo(graph)
-    # ga.load_from_json('../data/A3')
-     # ga.plot_graph()
-    # print(time.time() - ST)
-
-        #tuple_ans = ga.shortest_path(3, 2)
-        #print(tuple_ans)
-        
-        #print(ga.connected_components())
-        #ga1 = GraphAlgo(Graph())
-        #print(ga1.connected_components())
-        
-        #print(ga.connected_component(2))
-        
-        #ga.save_to_json("../test1.txt")
-        
-        #print(ga.load_from_json('../data/T0.json'))
-        #print(ga.get_graph())
-
-
-
 
     
     
