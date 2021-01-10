@@ -15,7 +15,8 @@ The **DiGraph** inherit from GraphInterface (e.g. in python we havn't interfaces
 You can operate sum operations on the graph, you can removeNode, you can AddNode , you can conncet between two nodes and put weight for the edge,
 the graph is directed weighted graph, in GraphAlgo class have the plot of the graph and the graph look like this:
 
-![image](https://user-images.githubusercontent.com/61500507/103581407-a43e7a00-4ee4-11eb-9c24-3646662b38e4.png)
+![Capture](https://user-images.githubusercontent.com/61500507/104128595-3b865000-5371-11eb-886a-96341fa8bda8.PNG)
+
 
 To read more on graph operation [Press Here!](https://github.com/EN555/ex3/wiki/The-Graph)
 
