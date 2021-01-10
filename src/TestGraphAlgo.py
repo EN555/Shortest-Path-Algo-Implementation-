@@ -5,7 +5,7 @@ Created on Fri Jan  1 12:23:31 2021
 @author: nir son
 """
 
-from DiGraph import Graph
+from DiGraph import DiGraph
 from DiGraph import Node
 from GraphAlgo import GraphAlgo
 import math
@@ -14,10 +14,10 @@ import random
 
 import unittest
 
-def simpleGraphGenerator() -> Graph:
+def simpleGraphGenerator() -> DiGraph:
     """ generate a ssimple graph with 4 nodes """
     
-    graph = Graph()
+    graph = DiGraph()
     
     graph.add_node(0 , (1,2,0))
     graph.add_node(1 , (2,2,0))
@@ -54,7 +54,7 @@ class GraphAlgoTest(unittest.TestCase):
         ga.get_graph().remove_edge(2,0)
         self.assertEqual(ga.connected_components().sort() , [[0],[1],[2],[3]].sort(), "connected components dont math")
         
-        ga = GraphAlgo(Graph())
+        ga = GraphAlgo(DiGraph())
         self.assertEqual(ga.connected_components() , [], "emtpy graph have no SCC")
         
     def test_connected_component(self):
@@ -78,10 +78,10 @@ class GraphAlgoTest(unittest.TestCase):
         
         self.assertFalse(ga.load_from_json("no_file") , "there is not such file")
         
-        ga = GraphAlgo(Graph())
+        ga = GraphAlgo(DiGraph())
         self.assertTrue(ga.save_to_json("test3.json"), "empty graph should be saved")
         self.assertTrue(ga.load_from_json("test3.json"), "empty graph should be loaded")
-        self.assertEqual(ga.get_graph() , Graph() , "not loaded empty graph")
+        self.assertEqual(ga.get_graph() , DiGraph() , "not loaded empty graph")
         
         
         graph = simpleGraphGenerator()
