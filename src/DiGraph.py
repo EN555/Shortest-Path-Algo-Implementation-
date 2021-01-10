@@ -68,7 +68,7 @@ class DiGraph(GraphInterface):
     """
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
         l1, l2 = self.nodes.get(id1), self.nodes.get(id2)
-        if l1 == None or l2 == None or weight < 0 or id1 == id2:     # check if the node exist
+        if l1 == None or l2 == None or weight < 0 or id1 == id2 or l1.get_neighbors().get(id2) != None:     # check if the node exist
             return False                                                        # and the edge not exist
         else:       # if they already have not edge
             l1.add_neighbor(l2, weight)  # add to his neighbor edge
