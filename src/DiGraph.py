@@ -5,7 +5,7 @@ This graph represent directed weighted graph
 """
 
 
-class Graph(GraphInterface):
+class DiGraph(GraphInterface):
 
     """
     constructor

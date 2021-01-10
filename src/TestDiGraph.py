@@ -1,11 +1,11 @@
 import unittest
-from Graph import Graph
+from DiGraph import Graph
 import time
 
 class GraphTest(unittest.TestCase):
 
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls) -> None:    # it's happen only at the start of the program def setUp before every test
         print("setUpClass")
 
     @classmethod

@@ -5,8 +5,8 @@ Created on Fri Jan  1 12:23:31 2021
 @author: nir son
 """
 
-from Graph import Graph
-from Graph import Node
+from DiGraph import Graph
+from DiGraph import Node
 from GraphAlgo import GraphAlgo
 import math
 import time

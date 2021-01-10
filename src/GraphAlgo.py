@@ -3,8 +3,8 @@
 from GraphAlgoInterface import GraphAlgoInterface
 from GraphInterface import GraphInterface
 from typing import List
-from Graph import Graph
-from Graph import Node
+from DiGraph import Graph
+from DiGraph import Node
 import math
 import heapq
 import json
@@ -119,13 +119,22 @@ class GraphAlgo(GraphAlgoInterface):
             node = stack[-1]
             if (node.get_info() != Color.WHITE.name):
                 node = stack.pop()
-                if(node.get_info() == Color.GREY.name):
-                    self.dict_help.update({node.get_key() : self.time_out})
+                if (node.get_info() == Color.GREY.name):
+                    self.dict_help.update({node.get_key(): self.time_out})
                     node.set_info(Color.BLACK.name)
             else:
                 node.set_info(Color.GREY.name)
                 node.set_tag(self.time_out)
                 ls_nei.append(node.get_key())
+                if (way == 'front'):
+                    for nei in node.get_neighbors().values():
+                        if (nei.get_info() == Color.WHITE.name):
+                            stack.append(nei)
+                else:
+                    for nei in node.get_connect_to_him().values():
+                        if (nei.get_info() == Color.WHITE.name):
+                            stack.append(nei)
+        return ls_nei
 
 
     def connected_components(self) -> List[list]:
@@ -263,10 +272,12 @@ if __name__ == '__main__':
     graph.add_node(6)#, (16670, 711))
     graph.add_node(7)#, (162, 34))
     graph.add_node(8)
-    for i in range(1, 50):
+    for i in range(10, 20):
         graph.add_node(i)
-    for i in range(1,30):
-        graph.add_edge(i, i+1, 1)
+    for i in range(10,17):
+        graph.add_edge(i, i+2, 1)
+        graph.add_edge(i, i + 3, 1)
+
     graph.add_edge(0, 1, 1)
     graph.add_edge(1, 2, 2)
     graph.add_edge(2, 3, 3)
@@ -331,7 +342,7 @@ if __name__ == '__main__':
     # ST = time.time()
     # ga = GraphAlgo(graph)
     # ga.load_from_json('../data/A3')
-    # ga.plot_graph()
+     # ga.plot_graph()
     # print(time.time() - ST)
 
         #tuple_ans = ga.shortest_path(3, 2)
