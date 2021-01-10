@@ -4,7 +4,7 @@
 
 This illustration exhibit all the classes and their dependencies.
 
-![image](https://user-images.githubusercontent.com/61500507/103583081-c5ed3080-4ee7-11eb-91fb-62a8e75c2138.png)
+![diagram](https://user-images.githubusercontent.com/61500507/104128284-5ce63c80-536f-11eb-8a8e-0cda54ca715e.png)
 
 The project composed of two abstract class GraphInterface and GraphAlgoInTnterface, The three classes is the **DiGraph** and **GraphAlgo** and **Node**.
 
