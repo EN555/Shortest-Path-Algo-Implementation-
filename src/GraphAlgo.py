@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from GraphAlgoInterface import GraphAlgoInterface
-from GraphInterface import GraphInterface
+from src.GraphAlgoInterface import GraphAlgoInterface
+from src.GraphInterface import GraphInterface
 from typing import List
-from Graph import Graph
-from Graph import Node
+from src.DiGraph import DiGraph
+from src.DiGraph import Node
 import math
 import heapq
 import json
@@ -97,6 +97,7 @@ class GraphAlgo(GraphAlgoInterface):
         param graph: get graph at the first time get original graph and after that get transpose graph
         return: list of all ths scc in the graph
         """
+
         for node in self.graph.get_all_v().values():  # move on all the nodes in the graph and initial their parameter
             node.set_tag(0), node.set_info(Color.WHITE.name), self.dict_help.update({node.get_key(): 0})
         self.time_out =0    # init the time of the dfs algorithm in the graph
@@ -109,6 +110,7 @@ class GraphAlgo(GraphAlgoInterface):
         return scc
 
 
+
     def __dfs_rec(self, node: Node = None, ls_nei: list = [] , way: str = 'front'):   # run dfs from specific node
 
         stack = [node]
@@ -117,62 +119,29 @@ class GraphAlgo(GraphAlgoInterface):
             node = stack[-1]
             if (node.get_info() != Color.WHITE.name):
                 node = stack.pop()
-                if(node.get_info() == Color.GREY.name):
-                    self.dict_help.update({node.get_key() : self.time_out})
+                if (node.get_info() == Color.GREY.name):
+                    self.dict_help.update({node.get_key(): self.time_out})
                     node.set_info(Color.BLACK.name)
             else:
                 node.set_info(Color.GREY.name)
                 node.set_tag(self.time_out)
                 ls_nei.append(node.get_key())
-                if(way == 'front'):
+                if (way == 'front'):
                     for nei in node.get_neighbors().values():
-                        if(nei.get_info() == Color.WHITE.name):
+                        if (nei.get_info() == Color.WHITE.name):
                             stack.append(nei)
                 else:
                     for nei in node.get_connect_to_him().values():
-                        if(nei.get_info() == Color.WHITE.name):
+                        if (nei.get_info() == Color.WHITE.name):
                             stack.append(nei)
         return ls_nei
-                    
-
-# =============================================================================
-#             stack = [node]
-#             while(stack):
-#                 current = stack.pop()
-#                 if current.get_info() == Color.WHITE.name:  # if the color is white first need to update the color
-#                     current.set_info(Color.GREY.name)
-#                     current.set_tag(self.time_out)
-#                     ls_nei.append(current.get_key())
-#                     self.time_out += 1
-#                     stack = [current] + stack
-#                     
-#                     
-#                     
-#                     if(way == 'front'):
-#                         for nei in current.get_neighbors().values():   # if it's was grey or white need to check his neighbors
-#                            if nei.get_info() == Color.WHITE.name:
-#                               stack = [nei] + stack   # the function will stop when that won't fount white node
-#                     else:
-#                         for nei in current.get_connect_to_him().values():   # if it's was grey or white need to check his neighbors
-#                            if nei.get_info() == Color.WHITE.name:
-#                                stack = [nei] + stack   # the function will stop when that won't fount white node
-#                 else:
-#                     if(current.get_key() not in self.dict_help.keys()):
-#                         self.dict_help.update({current.get_key(): self.time_out})  # <key, finish time>
-#                         self.time_out += 1
-#                 current.set_info(Color.BLACK.name)
-#             return ls_nei
-# =============================================================================
 
 
     def connected_components(self) -> List[list]:
         """  Finds all the Strongly Connected Component(SCC) in the graph , represented by list of lists"""
         self.__dfs_alg(self.graph.get_all_v().keys(), 'front')     # first call dfs on the original graph
-
         sort_list = list(self.graph.get_all_v().keys()).copy()  #get list of nodes
-       
         sort_list.sort(key = lambda x : self.dict_help.get(x) , reverse=True)   #sort list by desending finishing times
-            
         scc = self.__dfs_alg(sort_list, 'back')  # second call dfs
         return scc  # return all the scc of the graph
 
@@ -222,7 +191,7 @@ class GraphAlgo(GraphAlgoInterface):
         except: #if could'nt read from the file, return false
             return False
         
-        new_graph = Graph() #make a new graph
+        new_graph = DiGraph() #make a new graph
         
         for json_node in json_dict.get('Nodes'):    #get the list of nodes from the json
             if(json_node.get('pos') is not None):   #check if a position was give
@@ -288,135 +257,6 @@ class Color(Enum):
     WHITE = 1,
     BLACK = 2,
     GREY = 3
-
-
-if __name__ == '__main__':
-
-# =============================================================================
-#     graph = Graph()
-#     graph.add_node(0)#, (1, 200))
-#     graph.add_node(1)
-#     graph.add_node(2)#, (4543, 4455))
-#     graph.add_node(3)#, (7544, 5442))
-#     graph.add_node(4)#, (155, 266))
-#     graph.add_node(5)
-#     graph.add_node(6)#, (16670, 711))
-#     graph.add_node(7)#, (162, 34))
-#     graph.add_node(8)
-# 
-#     
-#     graph.add_edge(0, 1, 1)
-#     graph.add_edge(1, 2, 2)
-#     graph.add_edge(2, 3, 3)
-#     graph.add_edge(0, 2, 10)
-#     graph.add_edge(2, 0, 5)
-#     graph.add_edge(3, 5, 5)
-#     graph.add_edge(5, 3, 5)
-#     graph.add_edge(6, 6, 5)
-#     graph.add_edge(3,8, 5)
-#     graph.add_edge(7, 3, 5)
-#     graph.add_edge(8, 2, 5)
-#     graph.add_edge(8, 5, 5)
-#     graph.add_edge(4,6, 5)
-#     graph.add_edge(4,8, 5)
-# =============================================================================
-
-
-    # tuple_ans = ga.shortest_path(0, 3)
-    # print(tuple_ans)
-# =============================================================================
-#     graph = Graph()
-#    
-#     graph.add_node(0 ,(1,2,0))
-#     graph.add_node(1,(2,2,0))
-#     graph.add_node(2,(2,1,0))
-#     graph.add_node(3,(1,1,0))
-#     graph.add_node(4,(1,1,0))
-#     graph.add_node(5,(1,1,0))
-#     graph.add_node(6,(1,1,0))
-#     graph.add_node(7,(1,1,0))
-# 
-#     graph.add_edge(0, 1, 1)
-#     graph.add_edge(1, 2, 2)
-#     graph.add_edge(2, 3, 3)
-#     graph.add_edge(0, 2, 10)
-#     graph.add_edge(3, 0, 5)
-#     graph.add_edge(2, 4, 5)
-#     graph.add_edge(5, 3, 5)
-#     graph.add_edge(5, 6, 5)
-#     graph.add_edge(6, 7, 5)
-#     graph.add_edge(7, 5, 5)
-# =============================================================================
-
-
-
-    # graph.add_edge(3, 5, 5)
-    # graph.add_edge(5, 3, 5)
-    # graph.add_edge(6, 6, 5)
-    # graph.add_edge(3,8, 5)
-    # graph.add_edge(7, 3, 5)
-    # graph.add_edge(8, 2, 5)
-    # graph.add_edge(8, 5, 5)
-    # graph.add_edge(4,6, 5)
-    # graph.add_edge(4,8, 5)
-
-    graph = Graph()
-
-    graph.add_node(0, (1, 2, 0))
-    graph.add_node(1, (2, 2, 0))
-    graph.add_node(2, (2, 1, 0))
-    graph.add_node(3, (1, 1, 0))
-
-    graph.add_edge(0, 1, 1)
-    graph.add_edge(1, 2, 2)
-    graph.add_edge(2, 3, 0.5)
-    graph.add_edge(2, 0, 5)
-    graph.add_edge(0, 2, 2.3)
-    
-    ga = GraphAlgo(graph)
-    print(ga.connected_components())
-    #print(ga.connected_component(1))
-
-
-    # tuple_ans = ga.shortest_path(0, 3)
-    # print(tuple_ans)
-    # graph = Graph()
-    #
-    # graph.add_node(0)
-    # graph.add_node(1)
-    # graph.add_node(2)
-    # graph.add_node(3)
-    #
-    # graph.add_edge(0, 1, 1)
-    # graph.add_edge(1, 2, 2)
-    # graph.add_edge(2, 3, 3)
-    # graph.add_edge(0, 2, 10)
-    # graph.add_edge(2, 0, 5)
-        
-    # ga = GraphAlgo(graph)
-
-    # ST = time.time()
-    # ga = GraphAlgo(graph)
-    # ga.load_from_json('../data/A3')
-    # ga.plot_graph()
-    # print(time.time() - ST)
-
-        #tuple_ans = ga.shortest_path(3, 2)
-        #print(tuple_ans)
-        
-        #print(ga.connected_components())
-        #ga1 = GraphAlgo(Graph())
-        #print(ga1.connected_components())
-        
-        #print(ga.connected_component(2))
-        
-        #ga.save_to_json("../test1.txt")
-        
-        #print(ga.load_from_json('../data/T0.json'))
-        #print(ga.get_graph())
-
-
-
 
     
     
